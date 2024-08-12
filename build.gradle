@@ -39,6 +39,22 @@ dependencies {
 
     // Add WebDriver manager to automatically manage browser drivers
     implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '5.7.0'
+
+    // PostgreSQL JDBC 드라이버
+    implementation 'org.postgresql:postgresql:42.7.2' // 최신 버전으로 설정
+
+    // MySQL JDBC 드라이버 (Java 17 지원)
+    implementation 'mysql:mysql-connector-java:8.0.33'
+
+    // MariaDB JDBC 드라이버
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.4.1'
+
+    // Oracle JDBC 드라이버 (Java 17에 맞는 드라이버)
+    implementation 'com.oracle.database.jdbc:ojdbc11:21.7.0.0' // 최신 버전으로 설정
+
+//    // MongoDB Java 드라이버
+//    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+//    implementation 'org.mongodb:mongodb-driver-sync:4.11.0' // 최신 버전으로 설정
 }
 
 tasks.named('test') {

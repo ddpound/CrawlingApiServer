@@ -6,6 +6,13 @@
 크롤링 DB 이전 자동화 시스템, 주말에 집에서 혼자 끄적여서 만들었습니다. <br/>
 
 
+### 지원하는 DB
+1. postgresql
+2. mysql
+3. mariadb
+4. oracle
+5. mongodb
+
 ### 작업시간
 1. Beta 버전 : 6시간
 
@@ -48,6 +55,15 @@ nullableOrPass : null 이면 insert 없이 pass할지 안할지 체크 (true면 
 
 ```json
 {
+   "database" : {
+      "url": "jdbc:postgresql://127.0.0.1:5432/test_db",
+      "username": "testuser",
+      "password": "testpass1234!"
+   },
+   "fileSetting" : {
+      "filePhysicalSaveLocation" : "/Users/youseongjung/Ehs/tempfiles",
+      "dbFilePathLocation" : "/WebUpload/ispf/20240807/"
+   },
    "targetURI": "https://www.naver.com/${}/${}&test?v=${}",
    "targetLoopNumber" : 20,
    "targetParamsSettingList" : [
@@ -115,8 +131,7 @@ nullableOrPass : null 이면 insert 없이 pass할지 안할지 체크 (true면 
          "openWindowDownload": true,
          "id" : "1"
       }
-   ],
-   "fileDownloadFilePath" : ""
+   ]
 }
 
 
