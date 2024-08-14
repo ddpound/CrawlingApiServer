@@ -3,6 +3,7 @@ package com.crawlingapiserver.crawling.controller;
 
 import com.crawlingapiserver.crawling.model.CommandModel;
 import com.crawlingapiserver.crawling.service.CrawlingService;
+import com.crawlingapiserver.crawling.service.DBService;
 import com.crawlingapiserver.crawling.service.DBSettingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,24 +26,21 @@ public class CrawlingController {
 
     private final DBSettingService dbSettingService;
 
+    private final DBService dbService;
+
     @PostMapping(value = "run")
     public ResponseEntity<String> runCrawling(@RequestBody CommandModel commandModel) throws SQLException {
 
-        Connection connection = DriverManager.getConnection(commandModel.getDatabase().getUrl(), commandModel.getDatabase().getUsername(), commandModel.getDatabase().getPassword());
+        if(commandModel.getDatabase() != null){
 
-        String sql = "select * from test_board;";
-        String seqFileNumber = null;
-        try (PreparedStatement pstmt = connection.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-
-            if (rs.next()) {
-                seqFileNumber = rs.getString("author");
-                log.info(seqFileNumber);
+            if(commandModel.getDatabase().getUrl() == null){
+                return new ResponseEntity<>("url is not found", HttpStatus.BAD_REQUEST);
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+            Connection connection = DriverManager.getConnection(commandModel.getDatabase().getUrl(), commandModel.getDatabase().getUsername(), commandModel.getDatabase().getPassword());
+            dbService.testSetting(connection);
         }
+
 
         crawlingService.readCommands(commandModel);
 
