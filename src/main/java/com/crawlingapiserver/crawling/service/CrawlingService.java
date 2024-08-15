@@ -1,15 +1,13 @@
 package com.crawlingapiserver.crawling.service;
 
 import com.crawlingapiserver.crawling.model.CommandModel;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.sql.Connection;
 import java.util.List;
 
 
@@ -18,35 +16,40 @@ import java.util.List;
 public class CrawlingService {
 
     /**
-     * mode
-     *  1. DB Direct Insert
-     *  2. Create DB query txt file
-     *  3. 1번 2번 동시에 진행
-     *
+     * 최종 목적 uri 실행시켜주는 최종 서비스 메소드
      * */
-    public void readCommands(CommandModel commandModel){
-        // ObjectMapper 인스턴스를 생성합니다
-        try {
-            log.info("command read : {}", commandModel.toString());
-            log.info("target url : {}", commandModel.getTargetURI());
-            log.info("target loop number : {}", commandModel.getTargetLoopNumber());
-            log.info("target loop number : {}", commandModel.getTargetParamsSettingList());
-            log.info("db data : {}", commandModel.getDatabase());
-            log.info("file setting : {}", commandModel.getFileSetting());
+    public List<String> runCrawling(CommandModel commandModel, List<String> finalTargetList, Connection connection){
+        Boolean DbSwitch = false;
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(connection != null){
+            DbSwitch = true;
+            log.info("DB Direct Insert Mode ON");
         }
 
-    }
 
-    /**
-     * 최종 목적 uri 를 추출해주는 메소드
-     * */
-    public List<String> targetUriExtract(CommandModel commandModel){
+        // DB
+        if(DbSwitch){
+
+        }
 
 
         return null;
     }
 
+
+    /**
+     * 만들어진 쿼리 리스트를 텍스트파일로 생성해서 저장해줌,
+     * div 태그가 들어간 문자열들은 이스케이프 처리를 진행해서 저장해주어야 할 것으로 보임
+     *
+     * */
+    public void writeInsertTextFile(String filePath, List<String> insertQueryList) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            for (String insertQuery : insertQueryList) {
+                writer.write(insertQuery);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

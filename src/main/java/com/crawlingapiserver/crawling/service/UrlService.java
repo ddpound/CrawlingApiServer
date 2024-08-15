@@ -8,7 +8,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,30 +20,10 @@ public class UrlService {
 
 
     /**
-     * URL LIST 추출하기
-     *
-     * */
-    public List<String> urlExtraction(CommandModel commandModel){
-        System.out.println(commandModel.getTargetURI());
-        System.out.println(commandModel.getTargetParamsSettingList());
-        System.out.println(commandModel.getTargetLoopNumber());
-
-        // 1. loopNumber 만큼 반복
-        System.out.println(makeFinalTargetUrl(commandModel));
-
-        for (int i = 0; i < commandModel.getTargetLoopNumber()-1; i++) {
-
-        }
-
-
-        return null;
-    }
-
-    /**
      * 최종 target url을 만드는 메소드
      *
      * */
-    public String makeFinalTargetUrl(CommandModel commandModel) {
+    public List<String> makeFinalTargetUrl(CommandModel commandModel) {
         StringBuilder targetName = new StringBuilder();
         List<String> targetNameList = new ArrayList<>();
         List<String> replaceAllTargetNameList = new ArrayList<>();
@@ -78,16 +57,45 @@ public class UrlService {
             }
         }
 
-        System.out.println("중간 테스트");
-        System.out.println(replaceAllTargetNameList);
+        List<String> newTargetUriList = new ArrayList<>();
 
-        String newTartgetUri = targetUri;
+        // 입력 한 개수 만큼 반복
+        for (int i = 0; i < commandModel.getTargetLoopNumber()-1; i++) {
+            // 한번 돌린 값은 초기화
+            String newTartgetUri = targetUri;
 
-        for (int i = 0; i < replaceAllTargetNameList.size(); i++) {
-            newTartgetUri = newTartgetUri.replaceAll(replaceAllTargetNameList.get(i), targetMap.get(targetNameList.get(i)).getStartParams().toString());
+            for (int j = 0; j < replaceAllTargetNameList.size(); j++) {
+
+                int sumValue = 0;
+
+                // add 타입
+                if(targetMap.get(targetNameList.get(j)).getAddNumber() && i > 0){
+                    if(targetMap.get(targetNameList.get(j)).getStartParams().getClass() == Integer.class){
+                        sumValue = ((int) targetMap.get(targetNameList.get(j)).getStartParams() + targetMap.get(targetNameList.get(j)).getAddValue());
+                        targetMap.get(targetNameList.get(j)).setStartParams(sumValue);
+                    }
+                }
+
+                newTartgetUri = newTartgetUri.replaceAll(replaceAllTargetNameList.get(j), targetMap.get(targetNameList.get(j)).getStartParams().toString());
+            }
+
+            newTargetUriList.add(newTartgetUri);
         }
 
-        return newTartgetUri;
+        return newTargetUriList;
+    }
+
+    /**
+     *  객체중 targetURIList 검증진행후 반환하는 메소드
+     * */
+    public List<String> targetURIListValidationAndReturnData(CommandModel commandModel){
+
+        if(commandModel.getTargetURIList() != null  && !commandModel.getTargetURIList().isEmpty()){
+            return commandModel.getTargetURIList();
+        }
+
+        // 빈 배열 리스트 반환
+        return null;
     }
 
     /**

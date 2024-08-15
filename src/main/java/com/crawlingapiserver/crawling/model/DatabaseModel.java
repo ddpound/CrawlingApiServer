@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class DatabaseModel {
-    private String url;
-    private String username;
-    private String password;
+    private String  url;
+    private String  username;
+    private String  password;
+    private Boolean directInsert;
+    private Boolean makeInsertTextFile;
+    private String  insertTextFilePhysicalSavePath;
 }

@@ -2,7 +2,10 @@
     "database" : {
         "url": "jdbc:postgresql://127.0.0.1:5432/test_db",
         "username": "testuser",
-        "password": "testpass1234!"
+        "password": "testpass1234!",
+        "directInsert": true,
+        "makeInsertTextFile" : true,
+        "insertTextFilePhysicalSavePath" : ""
     },
     "fileSetting" : {
         "filePhysicalSaveLocation" : "/Users/youseongjung/Ehs/tempfiles",

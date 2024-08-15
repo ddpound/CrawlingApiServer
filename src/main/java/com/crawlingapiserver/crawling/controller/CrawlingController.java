@@ -42,19 +42,22 @@ public class CrawlingController {
         }
 
         // 검증 완료되면 추출 시작
+        // 요청할 url list를 추출하기, 만약 targetURIListValidationAndReturnData 에 값이 있으면 list addAll 진행
+        List<String> targetList = urlService.makeFinalTargetUrl(commandModel);
+        if(urlService.targetURIListValidationAndReturnData(commandModel) != null) targetList.addAll(urlService.targetURIListValidationAndReturnData(commandModel));
+        if(targetList != null && !targetList.isEmpty()) log.info("List extraction completed");
 
-        // 요청할 url list를 추출하기
-        List<String> targetList = urlService.urlExtraction(commandModel);
-
+        Connection connection = null;
 
         if(dbService.validationDbSetting(commandModel)){
-            Connection connection = DriverManager.getConnection(commandModel.getDatabase().getUrl(), commandModel.getDatabase().getUsername(), commandModel.getDatabase().getPassword());
+            connection = DriverManager.getConnection(commandModel.getDatabase().getUrl(), commandModel.getDatabase().getUsername(), commandModel.getDatabase().getPassword());
             dbService.testSetting(connection);
         }else{
             return new ResponseEntity<>("db value is not found : " + commandModel.getDatabase() , HttpStatus.BAD_REQUEST);
         }
 
-        crawlingService.readCommands(commandModel);
+
+        crawlingService.runCrawling(commandModel,targetList,connection);
 
         return new ResponseEntity<>("good", HttpStatus.OK);
     }

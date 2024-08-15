@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 public class CommandModel {
 
     private String targetURI;
-    private ArrayList<String> targetURIList;
+    private List<String> targetURIList;
     private ArrayList<Object> targetList;
     private ArrayList<Object> targetRangeList;
     private String tableName;
