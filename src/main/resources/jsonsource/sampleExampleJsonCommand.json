@@ -8,26 +8,14 @@
         "filePhysicalSaveLocation" : "/Users/youseongjung/Ehs/tempfiles",
         "dbFilePathLocation" : "/WebUpload/ispf/20240807/"
     },
-    "targetURI": "https://www.naver.com/{number1}/{number2}?test&v={stringParam1}",
-    "targetLoopNumber" : 20,
+    "targetURI": "http://ispf.mworks.kr/notice/{number}",
+    "targetLoopNumber" : 130,
     "targetParamsSettingList" : [
         {
-            "indexName" : "number1",
+            "indexName" : "number",
             "startParams" : 1,
             "addNumber" : true,
             "addValue" : 1
-        },
-        {
-            "indexName" : "number2",
-            "startParams" : 2,
-            "addNumber" : true,
-            "addValue" : 2
-        },
-        {
-            "indexName" : "stringParam1",
-            "startParams" : "test",
-            "addNumber" : false,
-            "addValue" : 0
         }
     ],
     "targetURIList": [

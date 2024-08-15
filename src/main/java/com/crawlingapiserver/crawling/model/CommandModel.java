@@ -20,7 +20,7 @@ public class CommandModel {
     private String tableName;
     private ArrayList<String> columnList;
     private ArrayList<LinkElementObject> linkElementObjectList;
-    private String targetLoopNumber;
+    private Integer targetLoopNumber;
     private ArrayList<TargetParamsSetting> targetParamsSettingList;
     private DatabaseModel database;
     private FileSettingModel fileSetting;
