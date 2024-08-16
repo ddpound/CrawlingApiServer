@@ -62,5 +62,20 @@ public class CrawlingController {
         return new ResponseEntity<>("good", HttpStatus.OK);
     }
 
+    /**
+     * 사용, run 하기전에 check-uri 요청을 통해서 요청하게될 uri 리스트를 확인해볼수 있습니다.
+     * */
+    @PostMapping(value = "check-uri")
+    public ResponseEntity<List<String>> checkYourTargetUriList(@RequestBody CommandModel commandModel){
+
+        // 검증 완료되면 추출 시작
+        // 요청할 url list를 추출하기, 만약 targetURIListValidationAndReturnData 에 값이 있으면 list addAll 진행
+        List<String> targetList = urlService.makeFinalTargetUrl(commandModel);
+        if(urlService.targetURIListValidationAndReturnData(commandModel) != null) targetList.addAll(urlService.targetURIListValidationAndReturnData(commandModel));
+        if(targetList != null && !targetList.isEmpty()) log.info("List extraction completed");
+
+        return new ResponseEntity<>(targetList, HttpStatus.OK);
+    }
+
 
 }

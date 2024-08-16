@@ -41,7 +41,6 @@ public class CrawlingService {
         return null;
     }
 
-
     /**
      * 만들어진 쿼리 리스트를 텍스트파일로 생성해서 저장해줌,
      * div 태그가 들어간 문자열들은 이스케이프 처리를 진행해서 저장해주어야 할 것으로 보임
