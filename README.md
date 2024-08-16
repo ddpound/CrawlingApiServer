@@ -58,41 +58,24 @@ nullableOrPass : null 이면 insert 없이 pass할지 안할지 체크 (true면 
    "database" : {
       "url": "jdbc:postgresql://127.0.0.1:5432/test_db",
       "username": "testuser",
-      "password": "testpass1234!"
+      "password": "testpass1234!",
+      "directInsert": true,
+      "makeInsertTextFile" : true,
+      "insertTextFilePhysicalSavePath" : ""
    },
    "fileSetting" : {
       "filePhysicalSaveLocation" : "/Users/youseongjung/Ehs/tempfiles",
       "dbFilePathLocation" : "/WebUpload/ispf/20240807/"
    },
-   "targetURI": "https://www.naver.com/${}/${}&test?v=${}",
-   "targetLoopNumber" : 20,
+   "targetURI": "http://ispf.mworks.kr/notice/{number}",
+   "targetLoopNumber" : 130,
    "targetParamsSettingList" : [
       {
-         "index" : 0,
+         "indexName" : "number",
          "startParams" : 1,
          "addNumber" : true,
          "addValue" : 1
-      },
-      {
-         "index" : 1,
-         "startParams" : 2,
-         "addNumber" : true,
-         "addValue" : 2
-      },
-      {
-         "index" : 2,
-         "startParams" : "test",
-         "addNumber" : false,
-         "addValue" : 0
       }
-   ],
-   "targetURIList": [
-      "https://www.naver.com/1/2&test?v=3",
-      "https://www.naver.com/1/3",
-      "https://www.naver.com/1/4&test?v=5",
-      "https://www.naver.com/2&test?v=${}",
-      "https://www.naver.com/board/14",
-      "https://www.naver.com"
    ],
    "tableName" : "testTable",
    "columnList" : ["board_title", "insert_date","file_group_id"],

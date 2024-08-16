@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,6 +33,11 @@ public class CrawlingService {
 
         }
 
+        Boolean textFileBoolean = commandModel.getDatabase().getMakeInsertTextFile();
+        if(textFileBoolean != null && textFileBoolean){
+            // 텍스트파일 생성
+            writeInsertTextFile(commandModel.getDatabase().getInsertTextFilePhysicalSavePath(), new ArrayList<String>());
+        }
 
         return null;
     }
