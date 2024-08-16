@@ -27,8 +27,7 @@ public class CrawlingService {
             log.info("DB Direct Insert Mode ON");
         }
 
-
-        // DB
+        // DB 체크
         if(DbSwitch){
 
         }
