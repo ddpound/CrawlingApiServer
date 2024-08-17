@@ -2,6 +2,7 @@ package com.crawlingapiserver.crawling.service;
 
 import com.crawlingapiserver.crawling.model.CommandModel;
 import com.crawlingapiserver.crawling.model.DatabaseModel;
+import com.crawlingapiserver.crawling.model.DbMappingElementObject;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @Log4j2
 @Service
@@ -29,6 +31,40 @@ public class DBService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void insertData(Connection connection, CommandModel commandModel, ArrayList<StringBuilder> insertContentList){
+        StringBuilder sql = new StringBuilder("insert into "+ commandModel.getTableName());
+        StringBuilder sqlColumns = new StringBuilder("(");
+        StringBuilder values = new StringBuilder("values(");
+
+        ArrayList<DbMappingElementObject> dbMappinglist = commandModel.getDbMappingElementObjectArrayList();
+        for (int i = 0; i < dbMappinglist.size(); i++) {
+            sqlColumns.append(dbMappinglist.get(i).getColumnName());
+
+            if(i < dbMappinglist.size()-1) sqlColumns.append(",");
+        }
+        sqlColumns.append(")");
+
+
+        for (int i = 0; i < dbMappinglist.size(); i++) {
+            values.append("?");
+
+            if(i < dbMappinglist.size()-1) values.append(",");
+        }
+        values.append(")");
+
+        sql.append(sqlColumns).append(values);
+
+        log.info(sql);
+
+//        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+//            pstmt.setString(1, "1");
+//            pstmt.setString(2, "2");
+//            pstmt.executeUpdate();
+//        } catch (SQLException e) {
+//            log.error(e);
+//        }
     }
 
     /**

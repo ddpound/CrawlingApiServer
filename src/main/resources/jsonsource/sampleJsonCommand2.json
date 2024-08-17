@@ -1,0 +1,50 @@
+{
+    "database" : {
+        "url": "jdbc:postgresql://127.0.0.1:5432/test_db",
+        "username": "testuser",
+        "password": "testpass1234!",
+        "directInsert": true,
+        "makeInsertTextFile" : true,
+        "insertTextFilePhysicalSavePath" : "",
+        "escape": true
+    },
+    "fileSetting" : {
+        "filePhysicalSaveLocation" : "/Users/youseongjung/Ehs/tempfiles",
+        "dbFilePathLocation" : "/WebUpload/ispf/20240807/"
+    },
+    "targetURI": "http://ispf.mworks.kr/notice/{number}",
+    "targetLoopNumber" : 1,
+    "targetParamsSettingList" : [
+        {
+            "indexName" : "number",
+            "startParams" : 25,
+            "addNumber" : true,
+            "addValue" : 1
+        }
+    ],
+    "tableName" : "testTable",
+    "columnList" : ["board_title", "insert_date","file_group_id"],
+    "dbMappingElementObjectArrayList" : [
+        {
+            "columnName" : "board_content",
+            "element" :  "div",
+            "elementFind" : "class",
+            "elementName" : "bo_v_tit",
+            "file" : false,
+            "nullableOrElseGet" : "데이터 이전 입니다.",
+            "elementOrderNumber" : 1,
+            "elementEverything" : false,
+            "onlyText" : true
+        },
+        {
+            "columnName" : "board_title",
+            "element" :  "div",
+            "elementFind" : "id",
+            "elementName" : "bo_v_con",
+            "file" : false,
+            "nullableOrElseGet" : "데이터 이전 입니다.",
+            "nullableOrPass" : false,
+            "onlyText" : false
+        }
+    ]
+}

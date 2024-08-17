@@ -16,4 +16,7 @@ public class DatabaseModel {
     private Boolean directInsert;
     private Boolean makeInsertTextFile;
     private String  insertTextFilePhysicalSavePath;
+
+    // DB에 insert를 진행할때는 이스케이프 처리를 진행하는게 적절하다
+    private Boolean escape = true;
 }

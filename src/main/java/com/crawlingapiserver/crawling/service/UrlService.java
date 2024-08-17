@@ -59,8 +59,11 @@ public class UrlService {
 
         List<String> newTargetUriList = new ArrayList<>();
 
+        int loopNumber = commandModel.getTargetLoopNumber()-1;
+        if(commandModel.getTargetLoopNumber() == 1) loopNumber = 1;
+
         // 입력 한 개수 만큼 반복
-        for (int i = 0; i < commandModel.getTargetLoopNumber()-1; i++) {
+        for (int i = 0; i < loopNumber; i++) {
             // 한번 돌린 값은 초기화
             String newTartgetUri = targetUri;
 
@@ -142,13 +145,6 @@ public class UrlService {
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build();
         }
-
-
-        System.out.println(extractTargetList);
-        System.out.println(commandModel.getTargetURI());
-        System.out.println(commandModel.getTargetParamsSettingList());
-        System.out.println(commandModel.getTargetLoopNumber());
-
 
         return ResponseStateModel.builder()
                 .state(true)

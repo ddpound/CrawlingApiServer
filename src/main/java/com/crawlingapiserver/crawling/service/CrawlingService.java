@@ -1,7 +1,10 @@
 package com.crawlingapiserver.crawling.service;
 
 import com.crawlingapiserver.crawling.model.CommandModel;
+import com.crawlingapiserver.crawling.model.DbMappingElementObject;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,8 +20,11 @@ import java.util.List;
 
 
 @Log4j2
+@RequiredArgsConstructor
 @Service
 public class CrawlingService {
+
+    private final DBService dbService;
 
     /**
      * 최종 목적 uri 실행시켜주는 최종 서비스 메소드
@@ -26,43 +32,56 @@ public class CrawlingService {
     public List<String> runCrawling(CommandModel commandModel, List<String> finalTargetList, Connection connection){
 
         try {
-            Boolean DbSwitch = false;
+            ArrayList<StringBuilder> finalContentList = new ArrayList<>();
+            StringBuilder finalContent = new StringBuilder();
 
-            if(connection != null){
-                DbSwitch = true;
-                log.info("DB Direct Insert Mode ON");
-            }
-
-            // DB 체크
-            if(DbSwitch){
-
-            }
-
+            // 1. 크롤링 데이터 추출
             for (String crawlingUri : finalTargetList) {
+                // 페이지 요청
                 Document doc = Jsoup.connect(crawlingUri).get();
-                Elements posts = doc.getElementsByTag("#bo_v");
 
-                log.info(doc.toString());
-                if(isPageNotFound(doc)){
-                    log.info("Page Not Found");
-                }else{
+                // 한페이지에 mapping element list의 길이만큼 반복
+                for (DbMappingElementObject mappingObject : commandModel.getDbMappingElementObjectArrayList()){
+                    String cssQuery = "";
+
+                    if(mappingObject.getElementFind().equals("id")) cssQuery = "#" + mappingObject.getElementName();
+                    if(mappingObject.getElementFind().equals("class")) cssQuery = "." + mappingObject.getElementName();
+
+                    Elements posts = doc.select(cssQuery);
+                    int orderCount = 1;
+
                     for (Element post : posts) {
-                        System.out.println(post.text());
+
+                        String content = mappingObject.getOnlyText() ? post.text() : post.toString();
+
+                        if(commandModel.getDatabase().getEscape()){
+                            content = StringEscapeUtils.escapeHtml4(content);
+                        }
+
+                        if(mappingObject.getElementEverything()){
+                            finalContent.append(content);
+                        }
+
+                        if(mappingObject.getElementOrderNumber() == orderCount && !mappingObject.getElementEverything()){
+                            finalContent.append(content);
+                        }
+
+                        orderCount++;
                     }
 
+                    if(!finalContent.isEmpty()) finalContentList.add(finalContent);
+                    finalContent = new StringBuilder();
                 }
-
             }
 
+            dbService.insertData(connection,commandModel,finalContentList);
 
-
+            // 2. insert 쿼리 추출
             Boolean textFileBoolean = commandModel.getDatabase().getMakeInsertTextFile();
             if(textFileBoolean != null && textFileBoolean){
                 // 텍스트파일 생성
                 writeInsertTextFile(commandModel.getDatabase().getInsertTextFilePhysicalSavePath(), new ArrayList<String>());
             }
-
-
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -71,9 +90,6 @@ public class CrawlingService {
 
         return null;
     }
-
-
-
 
 
     /**

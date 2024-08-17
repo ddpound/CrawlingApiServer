@@ -43,7 +43,7 @@
     ],
     "tableName" : "testTable",
     "columnList" : ["board_title", "insert_date","file_group_id"],
-    "linkElementObjectList" : [
+    "dbMappingElementObjectArrayList" : [
         {
             "columnName" : "board_title",
             "element" :  "div",
