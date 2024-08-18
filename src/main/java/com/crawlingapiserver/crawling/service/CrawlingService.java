@@ -2,6 +2,7 @@ package com.crawlingapiserver.crawling.service;
 
 import com.crawlingapiserver.crawling.model.CommandModel;
 import com.crawlingapiserver.crawling.model.DbMappingElementObject;
+import com.crawlingapiserver.crawling.model.ResponseStateModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.text.StringEscapeUtils;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +33,10 @@ public class CrawlingService {
     /**
      * 최종 목적 uri 실행시켜주는 최종 서비스 메소드
      * */
-    public List<String> runCrawling(CommandModel commandModel, List<String> finalTargetList, Connection connection){
+    public ResponseStateModel runCrawling(CommandModel commandModel, List<String> finalTargetList, Connection connection){
 
+        ResponseStateModel responseStateModel = null;
+        List<String> insertQueryList = new ArrayList<>();
         try {
             ArrayList<StringBuilder> finalContentList = new ArrayList<>();
             StringBuilder finalContent = new StringBuilder();
@@ -72,23 +78,27 @@ public class CrawlingService {
                     if(!finalContent.isEmpty()) finalContentList.add(finalContent);
                     finalContent = new StringBuilder();
                 }
-            }
 
-            dbService.insertData(connection,commandModel,finalContentList);
+                if(commandModel.getDatabase().getDirectInsert()){
+                    responseStateModel = dbService.insertData(connection,commandModel,finalContentList);
+                }
+
+                if(!finalContentList.isEmpty()) insertQueryList.add(dbService.makeInsertQueryList(commandModel,finalContentList).getInsertQuery());
+
+                finalContentList.clear();
+            }
 
             // 2. insert 쿼리 추출
             Boolean textFileBoolean = commandModel.getDatabase().getMakeInsertTextFile();
             if(textFileBoolean != null && textFileBoolean){
                 // 텍스트파일 생성
-                writeInsertTextFile(commandModel.getDatabase().getInsertTextFilePhysicalSavePath(), new ArrayList<String>());
+                writeInsertTextFile(commandModel.getDatabase().getInsertTextFilePhysicalSavePath(), insertQueryList, commandModel.getDatabase().getInsertTextFileName());
             }
 
+            return responseStateModel == null ? new ResponseStateModel() : responseStateModel;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
-        return null;
     }
 
 
@@ -108,14 +118,16 @@ public class CrawlingService {
      * div 태그가 들어간 문자열들은 이스케이프 처리를 진행해서 저장해주어야 할 것으로 보임
      *
      * */
-    public void writeInsertTextFile(String filePath, List<String> insertQueryList) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+    public void writeInsertTextFile(String filePath, List<String> insertQueryList, String fileName) throws IOException {
+        if(!fileName.contains(".txt")) fileName += ".txt"; // 확장자 붙여주기
+        Files.createDirectories(Paths.get(filePath));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(String.valueOf(Paths.get(filePath,fileName)), true))) {
             for (String insertQuery : insertQueryList) {
                 writer.write(insertQuery);
                 writer.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

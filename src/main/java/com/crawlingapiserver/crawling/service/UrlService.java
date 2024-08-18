@@ -126,7 +126,7 @@ public class UrlService {
                     if(j == targetUri.length()-1 && targetUri.charAt(j) != '}'){
                         // Please put closing parentheses, 괄호를 닫아주세요.
                         return ResponseStateModel.builder()
-                                .state(false)
+                                .state(-1)
                                 .message("Please put closing parentheses")
                                 .httpStatus(HttpStatus.BAD_REQUEST)
                                 .build();
@@ -140,14 +140,14 @@ public class UrlService {
         // 추출된 리스트와 기존 리스트 길이가 다르면 false 반환
         if(targetParamsList.size() != extractTargetList.size()){
             return ResponseStateModel.builder()
-                    .state(false)
+                    .state(-1)
                     .message("The number of {} variables in targeturl and targetParamsSettingList size is different")
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .build();
         }
 
         return ResponseStateModel.builder()
-                .state(true)
+                .state(1)
                 .build();
     }
 

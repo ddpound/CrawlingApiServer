@@ -37,7 +37,7 @@ public class CrawlingController {
     public ResponseEntity<String> runCrawling(@RequestBody CommandModel commandModel) throws SQLException {
 
         ResponseStateModel urlExtractionValidation = urlService.urlExtractionValidation(commandModel);
-        if(!urlExtractionValidation.getState()){
+        if(urlExtractionValidation.getState() != 1){
             return new ResponseEntity<>(urlExtractionValidation.getMessage() , urlExtractionValidation.getHttpStatus());
         }
 

@@ -5,7 +5,8 @@
         "password": "testpass1234!",
         "directInsert": true,
         "makeInsertTextFile" : true,
-        "insertTextFilePhysicalSavePath" : "",
+        "insertTextFilePhysicalSavePath" : "/Users/youseongjung/fileGroup",
+        "insertTextFileName" : "text.txt",
         "escape": true
     },
     "fileSetting" : {
@@ -13,7 +14,7 @@
         "dbFilePathLocation" : "/WebUpload/ispf/20240807/"
     },
     "targetURI": "http://ispf.mworks.kr/notice/{number}",
-    "targetLoopNumber" : 1,
+    "targetLoopNumber" : 6,
     "targetParamsSettingList" : [
         {
             "indexName" : "number",
@@ -22,11 +23,11 @@
             "addValue" : 1
         }
     ],
-    "tableName" : "testTable",
+    "tableName" : "test_board",
     "columnList" : ["board_title", "insert_date","file_group_id"],
     "dbMappingElementObjectArrayList" : [
         {
-            "columnName" : "board_content",
+            "columnName" : "title",
             "element" :  "div",
             "elementFind" : "class",
             "elementName" : "bo_v_tit",
@@ -37,10 +38,20 @@
             "onlyText" : true
         },
         {
-            "columnName" : "board_title",
+            "columnName" : "content",
             "element" :  "div",
             "elementFind" : "id",
             "elementName" : "bo_v_con",
+            "file" : false,
+            "nullableOrElseGet" : "데이터 이전 입니다.",
+            "nullableOrPass" : false,
+            "onlyText" : false
+        },
+        {
+            "columnName" : "author",
+            "element" :  "div",
+            "elementFind" : "class",
+            "elementName" : "sv_member",
             "file" : false,
             "nullableOrElseGet" : "데이터 이전 입니다.",
             "nullableOrPass" : false,
