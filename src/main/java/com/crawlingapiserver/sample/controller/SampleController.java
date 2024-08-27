@@ -12,4 +12,9 @@ public class SampleController {
     public String sample(){
         return "sample-main";
     }
+
+    @GetMapping(value = "test")
+    public String test(){
+        return "sample-main";
+    }
 }
